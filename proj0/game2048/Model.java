@@ -109,17 +109,123 @@ public class Model extends Observable {
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
-
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-
+        for (int c = 0; c < board.size(); c += 1) {
+            for (int r = 0; r < board.size(); r += 1) {
+                Tile t = board.tile(c, r);
+                if (board.tile(c, r) != null) {
+                    board.move(c, 3, t);
+                    changed = true;
+                    score += 7;
+                }
+            }
+        }
         checkGameOver();
         if (changed) {
             setChanged();
         }
         return changed;
     }
+
+    public void merge_helper(int col, int row, Tile t, boolean changed) {
+        board.move(col, row, t);
+        score = score + board.tile(col, row).value();
+        changed = true;
+    }
+    /**public void row2_helper(boolean changed) {
+        for (int col = 0;col < board.size();col = col + 1) {
+            Tile t = board.tile(col, 2);
+            if (t == null) {
+                continue;
+            }
+            else {
+                if (board.tile(col, 3) == null) {
+                    board.move(col, 3, t);
+                    changed = true;
+                }
+                else {
+                    if (board.tile(col, 3).value() == board.tile(col, 2).value()) {
+                        merge_helper(col, 3, t, changed);
+                    }
+                }
+            }
+        }
+    }
+
+    public void row1_helper(boolean changed) {
+        for (int col = 0;col < board.size();col = col + 1) {
+            Tile t = board.tile(col, 1);
+            if (t == null) {
+                continue;
+            }
+            else {
+                if (board.tile(col, 2) == null) {
+                    if (board.tile(col, 3) == null) {
+                        board.move(col, 3, t);
+                        changed = true;
+                    }
+                    else {
+                        if (board.tile(col, 3).value() == board.tile(col, 1).value()) {
+                            merge_helper(col, 3, t, changed);
+                        }
+                        else {
+                            board.move(col, 2, t);
+                            changed = true;
+                        }
+                    }
+                }
+                else {
+                    if (board.tile(col, 2).value() == board.tile(col, 1).value()) {
+                        merge_helper(col, 2, t, changed);
+                    }
+                }
+            }
+        }
+    }
+
+    public void row0_helper(boolean changed) {
+        for (int col = 0;col < board.size();col = col + 1) {
+            Tile t = board.tile(col, 0);
+            if (t == null) {
+                continue;
+            }
+            else {
+                if (board.tile(col, 1) == null) {
+                    if (board.tile(col, 2) == null) {
+                        if (board.tile(col, 3) == null) {
+                            board.move(col, 3, t);
+                            changed = true;
+                        }
+                        else {
+                            if (board.tile(col, 3).value() == board.tile(col, 0).value()) {
+                                merge_helper(col, 3, t, changed);
+                            }
+                            else {
+                                board.move(col, 2, t);
+                                changed = true;
+                            }
+                        }
+                    }
+                    else {
+                        if (board.tile(col, 2).value() == board.tile(col, 0).value()) {
+                            merge_helper(col, 2, t, changed);
+                        }
+                        else {
+                            board.move(col, 1, t);
+                            changed = true;
+                        }
+                    }
+                }
+                else {
+                    if (board.tile(col, 1).value() == board.tile(col, 0).value()) {
+                        merge_helper(col, 1, t, changed);
+                    }
+                }
+            }
+        }
+    }*/
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
@@ -137,7 +243,13 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        for (int col = 0; col < b.size(); col = col + 1) {
+            for (int row = 0; row < b.size(); row = row + 1) {
+                if (b.tile(col, row) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -147,7 +259,16 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        for (int col = 0; col < b.size(); col = col + 1) {
+            for (int row = 0; row < b.size(); row = row + 1) {
+                if (b.tile(col, row) == null) {
+                    continue;
+                }
+                if (b.tile(col, row).value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -158,7 +279,45 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        if (emptySpaceExists(b)) {
+            return true;
+        }
+        if (adjacentsame(b)) {
+            return true;
+        }
+        return false;
+    }
+
+    /** A helper function returns true if there's at least
+     * one adjacent same value pair*/
+    public static boolean adjacentsame(Board b) {
+        for (int col = 1; col < b.size() - 1; col = col + 1) {
+            for (int row = 1; row < b.size() - 1; row = row + 1) {
+                if ((b.tile(col, row).value() == b.tile(col - 1, row).value()) || (b.tile(col, row).value() == b.tile(col + 1, row).value()) || (b.tile(col, row).value() == b.tile(col, row - 1).value()) || (b.tile(col, row).value() == b.tile(col, row + 1).value())) {
+                    return true;
+                }
+            }
+        }
+        for (int col = 1; col < b.size() - 1; col = col + 1) {
+            if ((b.tile(col, 0).value() == b.tile(col - 1, 0).value()) || (b.tile(col, 0).value() == b.tile(col + 1, 0).value())) {
+                return true;
+            }
+        }
+        for (int col = 1; col < b.size() - 1; col = col + 1) {
+            if ((b.tile(col, b.size() - 1).value() == b.tile(col - 1, b.size() - 1).value()) || (b.tile(col, b.size() - 1).value() == b.tile(col + 1, b.size() - 1).value())) {
+                return true;
+            }
+        }
+        for (int row = 1; row < b.size() - 1; row = row + 1) {
+            if ((b.tile(0, row).value() == b.tile(0, row - 1).value()) || (b.tile(0, row).value() == b.tile(0, row + 1).value())) {
+                return true;
+            }
+        }
+        for (int row = 1; row < b.size() - 1; row = row + 1) {
+            if ((b.tile(b.size() - 1, row).value() == b.tile(b.size() - 1, row - 1).value()) || (b.tile(b.size() - 1, row).value() == b.tile(b.size() - 1, row + 1).value())) {
+                return true;
+            }
+        }
         return false;
     }
 
