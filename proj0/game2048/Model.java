@@ -109,10 +109,14 @@ public class Model extends Observable {
     public boolean tilt(Side side) {
         boolean changed;
         changed = false;
+        board.setViewingPerspective(side);
+        boolean[] merged3 = {false, false, false, false};
+        boolean[] merged2 = {false, false, false, false};
+        boolean[] merged1 = {false, false, false, false};
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-        for (int c = 0; c < board.size(); c += 1) {
+        /**for (int c = 0; c < board.size(); c += 1) {
             for (int r = 0; r < board.size(); r += 1) {
                 Tile t = board.tile(c, r);
                 if (board.tile(c, r) != null) {
@@ -121,7 +125,110 @@ public class Model extends Observable {
                     score += 7;
                 }
             }
+        }*/
+
+        //deal with row2
+        for (int col = 0;col < board.size();col = col + 1) {
+            Tile t = board.tile(col, 2);
+            if (t == null) {
+                continue;
+            }
+            else {
+                if (board.tile(col, 3) == null) {
+                    board.move(col, 3, t);
+                    changed = true;
+                }
+                else {
+                    if (board.tile(col, 3).value() == board.tile(col, 2).value() && !merged3[col]) {
+                        merge_helper(col, 3, t);
+                        changed = true;
+                        merged3[col] = true;
+                    }
+                }
+            }
         }
+
+        //deal with row1
+        for (int col = 0;col < board.size();col = col + 1) {
+            Tile t = board.tile(col, 1);
+            if (t == null) {
+                continue;
+            }
+            else {
+                if (board.tile(col, 2) == null) {
+                    if (board.tile(col, 3) == null) {
+                        board.move(col, 3, t);
+                        changed = true;
+                    }
+                    else {
+                        if (board.tile(col, 3).value() == board.tile(col, 1).value() && !merged3[col]) {
+                            merge_helper(col, 3, t);
+                            changed = true;
+                            merged3[col] = true;
+                        }
+                        else {
+                            board.move(col, 2, t);
+                            changed = true;
+                        }
+                    }
+                }
+                else {
+                    if (board.tile(col, 2).value() == board.tile(col, 1).value() && !merged2[col]) {
+                        merge_helper(col, 2, t);
+                        changed = true;
+                        merged2[col] = true;
+                    }
+                }
+            }
+        }
+
+        //deal with row0
+        for (int col = 0;col < board.size();col = col + 1) {
+            Tile t = board.tile(col, 0);
+            if (t == null) {
+                continue;
+            }
+            else {
+                if (board.tile(col, 1) == null) {
+                    if (board.tile(col, 2) == null) {
+                        if (board.tile(col, 3) == null) {
+                            board.move(col, 3, t);
+                            changed = true;
+                        }
+                        else {
+                            if (board.tile(col, 3).value() == board.tile(col, 0).value() && !merged3[col]) {
+                                merge_helper(col, 3, t);
+                                changed = true;
+                                merged3[col] = true;
+                            }
+                            else {
+                                board.move(col, 2, t);
+                                changed = true;
+                            }
+                        }
+                    }
+                    else {
+                        if (board.tile(col, 2).value() == board.tile(col, 0).value() && !merged2[col]) {
+                            merge_helper(col, 2, t);
+                            changed = true;
+                            merged2[col] = true;
+                        }
+                        else {
+                            board.move(col, 1, t);
+                            changed = true;
+                        }
+                    }
+                }
+                else {
+                    if (board.tile(col, 1).value() == board.tile(col, 0).value() && !merged1[col]) {
+                        merge_helper(col, 1, t);
+                        changed = true;
+                        merged1[col] = true;
+                    }
+                }
+            }
+        }
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
@@ -129,10 +236,9 @@ public class Model extends Observable {
         return changed;
     }
 
-    public void merge_helper(int col, int row, Tile t, boolean changed) {
+    public void merge_helper(int col, int row, Tile t) {
         board.move(col, row, t);
         score = score + board.tile(col, row).value();
-        changed = true;
     }
     /**public void row2_helper(boolean changed) {
         for (int col = 0;col < board.size();col = col + 1) {
