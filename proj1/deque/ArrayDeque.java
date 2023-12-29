@@ -32,7 +32,7 @@ public class ArrayDeque<item> {
         items[nextFirst] = x;
         size = size + 1;
         if (nextFirst == 0) {
-            nextFirst = size - 1;
+            nextFirst = items.length - 1;
         } else {
             nextFirst = nextFirst - 1;
         }
@@ -43,7 +43,7 @@ public class ArrayDeque<item> {
         }
         items[nextLast] = x;
         size = size + 1;
-        if (nextLast == size - 1) {
+        if (nextLast == items.length - 1) {
             nextLast = 0;
         } else {
             nextLast = nextLast + 1;
@@ -66,12 +66,12 @@ public class ArrayDeque<item> {
             }
         } else {
             j = nextFirst + 1;
-            while (items[j] != null) {
+            while (j < items.length && items[j] != null) {
                 System.out.print(items[j] + " ");
                 j = j + 1;
             }
             k = 0;
-            while (items[k] != null) {
+            while (items[k] != null && k <= this.size() - (items.length - nextFirst)) {
                 System.out.print(items[k] + " ");
                 k = k + 1;
             }
@@ -108,10 +108,10 @@ public class ArrayDeque<item> {
         if (index < 0 || index >= this.size()) {
             return null;
         }
-        if (nextFirst == items.length - 1) {
-            return items[index];
-        } else {
+        if (index < items.length - nextFirst - 1) {
             return items[nextFirst + index + 1];
+        } else {
+            return items[index - (items.length - nextFirst - 1)];
         }
     }
     public boolean equals(Object o) {
@@ -146,17 +146,16 @@ public class ArrayDeque<item> {
         //d1.removeFirst();
         //d1.removeLast();
         //d1.removeLast();
-        System.out.println(d1.get(2));
+        d1.addFirst(1);
+        d1.addFirst(2);
+        d1.addLast(3);
+        d1.addLast(4);
+        System.out.println(d1.size());
+        System.out.println(d1.get(6));
+
         d1.printDeque();
-        ArrayDeque<Integer> d2 = new ArrayDeque<>();
-        d2.addFirst(10);
-        d2.addFirst(179);
-        d2.addFirst(2334);
-        d2.addLast(45254);
-        d2.addLast(1);
         //d2.printDeque();
         //System.out.println(d1.removeFirst());
         //System.out.println(d1.size());
-        System.out.println(d1.equals(d2));
     }
 }
