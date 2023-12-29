@@ -149,7 +149,6 @@ public class ArrayDeque<item> {
         d1.addFirst(1);
         d1.addFirst(2);
         d1.addLast(3);
-        d1.addLast(4);
         System.out.println(d1.size());
         System.out.println(d1.get(6));
 
