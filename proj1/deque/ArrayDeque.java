@@ -145,20 +145,22 @@ public class ArrayDeque<item> implements Deque<item>, Iterable<item> {
         if (this == o) {
             return true;
         }
-        if (o instanceof ArrayDeque oad) {
-            // check size
-            if (oad.size != this.size) {
+        if (!(o instanceof Deque)) {
+            return false;
+        }
+        if (o == null) {
+            return false;
+        }
+        Deque<item> oa = (Deque<item>) o;
+        if (oa.size() != this.size()) {
+            return false;
+        }
+        for (int i = 0; i < this.size(); i++) {
+            if (!(oa.get(i).equals(this.get(i)))) {
                 return false;
             }
-            // check all entries are the same
-            for (int i = 0; i < size; i++) {
-                if (!(oad.get(i).equals(this.get(i)))) {
-                    return false;
-                }
-            }
-            return true;
         }
-        return false;
+        return true;
     }
     public static void main(String[] args) {
         ArrayDeque<Integer> d1 = new ArrayDeque<>(2);

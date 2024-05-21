@@ -152,20 +152,22 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
         if (this == o) {
             return true;
         }
-        if (o instanceof LinkedListDeque old) {
-            // check size
-            if (old.size != this.size) {
+        if (!(o instanceof Deque)) {
+            return false;
+        }
+        if (o == null) {
+            return false;
+        }
+        Deque<BleepBlorp> ol = (Deque<BleepBlorp>) o;
+        if (ol.size() != this.size()) {
+            return false;
+        }
+        for (int i = 0; i < this.size(); i++) {
+            if (!(ol.get(i).equals(this.get(i)))) {
                 return false;
             }
-            // check all entries are the same
-            for (int i = 0; i < size; i++) {
-                if (!(old.get(i).equals(this.get(i)))) {
-                    return false;
-                }
-            }
-            return true;
         }
-        return false;
+        return true;
     }
 
     public static void main(String[] args) {
