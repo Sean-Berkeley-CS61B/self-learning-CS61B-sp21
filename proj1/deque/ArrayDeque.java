@@ -1,6 +1,7 @@
 package deque;
+import java.util.Iterator;
 
-public class ArrayDeque<item> {
+public class ArrayDeque<item> implements Deque<item>, Iterable<item> {
     private int size;
     private int j;
     private int k;
@@ -11,6 +12,12 @@ public class ArrayDeque<item> {
     public ArrayDeque() {
         items = (item[]) new Object[8];
         size = 0;
+    }
+    public ArrayDeque(item x) {
+        items = (item[]) new Object[8];
+        items[nextFirst] = x;
+        nextFirst = nextFirst - 1;
+        size = 1;
     }
     private void expandsize() {
         item[] a = (item[]) new Object[items.length * 2];
@@ -25,6 +32,7 @@ public class ArrayDeque<item> {
             items = a;
         }
     }
+    @Override
     public void addFirst(item x) {
         if (size == items.length) {
             expandsize();
@@ -37,6 +45,7 @@ public class ArrayDeque<item> {
             nextFirst = nextFirst - 1;
         }
     }
+    @Override
     public void addLast(item x) {
         if (size == items.length) {
             expandsize();
@@ -49,15 +58,11 @@ public class ArrayDeque<item> {
             nextLast = nextLast + 1;
         }
     }
+    @Override
     public int size() {
         return size;
     }
-    public boolean isEmpty() {
-        if (this.size() == 0) {
-            return true;
-        }
-        return false;
-    }
+    @Override
     public void printDeque() {
         sizecpy = this.size();
         if (nextFirst == items.length - 1) {
@@ -78,6 +83,7 @@ public class ArrayDeque<item> {
             }
         System.out.println("");
     }
+    @Override
     public item removeFirst() {
         if (this.size() == 0) {
             return null;
@@ -91,6 +97,7 @@ public class ArrayDeque<item> {
             return items[nextFirst];
         }
     }
+    @Override
     public item removeLast() {
         if (this.size() == 0) {
             return null;
@@ -104,6 +111,7 @@ public class ArrayDeque<item> {
             return items[nextLast];
         }
     }
+    @Override
     public item get(int index) {
         if (index < 0 || index >= this.size()) {
             return null;
@@ -114,29 +122,46 @@ public class ArrayDeque<item> {
             return items[index - (items.length - nextFirst - 1)];
         }
     }
+
+    @Override
+    public Iterator<item> iterator() {
+        return new ArrayDequeIterator();
+    }
+    public class ArrayDequeIterator implements Iterator<item> {
+        private int wizPos;
+        public ArrayDequeIterator() {
+            wizPos = 0;
+        }
+        public boolean hasNext() {
+            return wizPos < size;
+        }
+        public item next() {
+            item returnItem = get(wizPos);
+            wizPos += 1;
+            return returnItem;
+        }
+    }
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (o == null) {
-            return false;
-        }
-        if (!(o instanceof ArrayDeque)) {
-            return false;
-        }
-        ArrayDeque<item> ol = (ArrayDeque<item>) o;
-        if (ol.size() != this.size()) {
-            return false;
-        }
-        for (int i = 0; i < size; i++) {
-            if (!(ol.get(i).equals(this.get(i)))) {
+        if (o instanceof ArrayDeque oad) {
+            // check size
+            if (oad.size != this.size) {
                 return false;
             }
+            // check all entries are the same
+            for (int i = 0; i < size; i++) {
+                if (!(oad.get(i).equals(this.get(i)))) {
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
+        return false;
     }
     public static void main(String[] args) {
-        ArrayDeque<Integer> d1 = new ArrayDeque<>();
+        ArrayDeque<Integer> d1 = new ArrayDeque<>(2);
         d1.addFirst(10);
         d1.addFirst(179);
         d1.addFirst(2334);
@@ -146,15 +171,29 @@ public class ArrayDeque<item> {
         //d1.removeFirst();
         //d1.removeLast();
         //d1.removeLast();
-        d1.addFirst(1);
-        d1.addFirst(2);
-        d1.addLast(3);
-        System.out.println(d1.size());
-        System.out.println(d1.get(6));
+//        d1.addFirst(1);
+//        d1.addFirst(2);
+//        d1.addLast(3);
+//        System.out.println(d1.size());
+//        System.out.println(d1.get(6));
 
         d1.printDeque();
         //d2.printDeque();
         //System.out.println(d1.removeFirst());
-        //System.out.println(d1.size());
+//        System.out.println(d1.get(1));
+//        Iterator<Integer> ader = d1.iteraror();
+        for (int i : d1) {
+            System.out.println(i);
+        }
+        ArrayDeque<Integer> d2 = new ArrayDeque<>();
+        d2.addFirst(1);
+        d2.addFirst(179);
+        d2.addFirst(2334);
+        d2.addLast(45254);
+        ArrayDeque<Integer> ad1 = new ArrayDeque<Integer>();
+        for (int i = 0; i < 1000000; i++) {
+            ad1.addLast(i);
+        }
+        System.out.println(d1.equals(d2));
     }
 }
