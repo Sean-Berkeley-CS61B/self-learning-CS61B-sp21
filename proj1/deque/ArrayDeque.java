@@ -1,58 +1,58 @@
 package deque;
 import java.util.Iterator;
 
-public class ArrayDeque<item> implements Deque<item>, Iterable<item> {
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     private int size;
     private int j;
     private int k;
     private int nextFirst = 3;
     private int nextLast = 4;
     private int sizecpy;
-    private item[] items;
+    private T[] Ts;
     public ArrayDeque() {
-        items = (item[]) new Object[8];
+        Ts = (T[]) new Object[8];
         size = 0;
     }
-    public ArrayDeque(item x) {
-        items = (item[]) new Object[8];
-        items[nextFirst] = x;
+    public ArrayDeque(T x) {
+        Ts = (T[]) new Object[8];
+        Ts[nextFirst] = x;
         nextFirst = nextFirst - 1;
         size = 1;
     }
     private void expandsize() {
-        item[] a = (item[]) new Object[items.length * 2];
+        T[] a = (T[]) new Object[Ts.length * 2];
         if (nextLast == 0) {
-            System.arraycopy(items, 0, a, a.length - size, size);
+            System.arraycopy(Ts, 0, a, a.length - size, size);
             nextFirst = a.length - size - 1;
-            items = a;
+            Ts = a;
         } else {
-            System.arraycopy(items, 0, a, 0, nextLast);
-            System.arraycopy(items, nextLast, a, a.length - (size - nextFirst) + 1, size - nextLast);
+            System.arraycopy(Ts, 0, a, 0, nextLast);
+            System.arraycopy(Ts, nextLast, a, a.length - (size - nextFirst) + 1, size - nextLast);
             nextFirst = a.length - (size - nextFirst);
-            items = a;
+            Ts = a;
         }
     }
     @Override
-    public void addFirst(item x) {
-        if (size == items.length) {
+    public void addFirst(T x) {
+        if (size == Ts.length) {
             expandsize();
         }
-        items[nextFirst] = x;
+        Ts[nextFirst] = x;
         size = size + 1;
         if (nextFirst == 0) {
-            nextFirst = items.length - 1;
+            nextFirst = Ts.length - 1;
         } else {
             nextFirst = nextFirst - 1;
         }
     }
     @Override
-    public void addLast(item x) {
-        if (size == items.length) {
+    public void addLast(T x) {
+        if (size == Ts.length) {
             expandsize();
         }
-        items[nextLast] = x;
+        Ts[nextLast] = x;
         size = size + 1;
-        if (nextLast == items.length - 1) {
+        if (nextLast == Ts.length - 1) {
             nextLast = 0;
         } else {
             nextLast = nextLast + 1;
@@ -65,69 +65,69 @@ public class ArrayDeque<item> implements Deque<item>, Iterable<item> {
     @Override
     public void printDeque() {
         sizecpy = this.size();
-        if (nextFirst == items.length - 1) {
+        if (nextFirst == Ts.length - 1) {
             for (int i = 0; i < sizecpy; i++) {
-                System.out.print(items[i] + " ");
+                System.out.print(Ts[i] + " ");
             }
         } else {
             j = nextFirst + 1;
-            while (j < items.length && items[j] != null) {
-                System.out.print(items[j] + " ");
+            while (j < Ts.length && Ts[j] != null) {
+                System.out.print(Ts[j] + " ");
                 j = j + 1;
             }
             k = 0;
-            while (items[k] != null && k <= this.size() - (items.length - nextFirst)) {
-                System.out.print(items[k] + " ");
+            while (Ts[k] != null && k <= this.size() - (Ts.length - nextFirst)) {
+                System.out.print(Ts[k] + " ");
                 k = k + 1;
             }
             }
         System.out.println("");
     }
     @Override
-    public item removeFirst() {
+    public T removeFirst() {
         if (this.size() == 0) {
             return null;
         }
         size = size - 1;
-        if (nextFirst == items.length - 1) {
+        if (nextFirst == Ts.length - 1) {
             nextFirst = 0;
-            return items[0];
+            return Ts[0];
         } else {
             nextFirst = nextFirst + 1;
-            return items[nextFirst];
+            return Ts[nextFirst];
         }
     }
     @Override
-    public item removeLast() {
+    public T removeLast() {
         if (this.size() == 0) {
             return null;
         }
         size = size - 1;
         if (nextLast == 0) {
-            nextLast = items.length - 1;
-            return items[items.length - 1];
+            nextLast = Ts.length - 1;
+            return Ts[Ts.length - 1];
         } else {
             nextLast = nextLast - 1;
-            return items[nextLast];
+            return Ts[nextLast];
         }
     }
     @Override
-    public item get(int index) {
+    public T get(int index) {
         if (index < 0 || index >= this.size()) {
             return null;
         }
-        if (index < items.length - nextFirst - 1) {
-            return items[nextFirst + index + 1];
+        if (index < Ts.length - nextFirst - 1) {
+            return Ts[nextFirst + index + 1];
         } else {
-            return items[index - (items.length - nextFirst - 1)];
+            return Ts[index - (Ts.length - nextFirst - 1)];
         }
     }
 
     @Override
-    public Iterator<item> iterator() {
+    public Iterator<T> iterator() {
         return new ArrayDequeIterator();
     }
-    public class ArrayDequeIterator implements Iterator<item> {
+    public class ArrayDequeIterator implements Iterator<T> {
         private int wizPos;
         public ArrayDequeIterator() {
             wizPos = 0;
@@ -135,10 +135,10 @@ public class ArrayDeque<item> implements Deque<item>, Iterable<item> {
         public boolean hasNext() {
             return wizPos < size;
         }
-        public item next() {
-            item returnItem = get(wizPos);
+        public T next() {
+            T returnT = get(wizPos);
             wizPos += 1;
-            return returnItem;
+            return returnT;
         }
     }
     public boolean equals(Object o) {
@@ -151,7 +151,7 @@ public class ArrayDeque<item> implements Deque<item>, Iterable<item> {
         if (o == null) {
             return false;
         }
-        Deque<item> oa = (Deque<item>) o;
+        Deque<T> oa = (Deque<T>) o;
         if (oa.size() != this.size()) {
             return false;
         }

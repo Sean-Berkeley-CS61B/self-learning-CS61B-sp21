@@ -22,7 +22,7 @@ public class ArrayDequeTest {
         // The && operator is the same as "and" in Python.
         // It's a binary operator that returns true if both arguments true, and false otherwise.
         assertEquals(1, ad1.size());
-        assertFalse("lld1 should now contain 1 item", ad1.isEmpty());
+        assertFalse("lld1 should now contain 1 T", ad1.isEmpty());
 
         ad1.addLast("middle");
         assertEquals(2, ad1.size());
@@ -36,7 +36,7 @@ public class ArrayDequeTest {
     }
 
     @Test
-    /** Adds an item, then removes an item, and ensures that dll is empty afterwards. */
+    /** Adds an T, then removes an T, and ensures that dll is empty afterwards. */
     public void addRemoveTest() {
 
         System.out.println("Make sure to uncomment the lines below (and delete this print statement).");
@@ -47,7 +47,7 @@ public class ArrayDequeTest {
 
         ad1.addFirst(10);
         // should not be empty
-        assertFalse("lld1 should contain 1 item", ad1.isEmpty());
+        assertFalse("lld1 should contain 1 T", ad1.isEmpty());
 
         ad1.removeFirst();
         // should be empty

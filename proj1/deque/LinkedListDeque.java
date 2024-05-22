@@ -2,18 +2,18 @@ package deque;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<BleepBlorp>{
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     public class Intnode {
         public Intnode prev;
-        public BleepBlorp item;
+        public T T;
         public Intnode next;
         public Intnode(Intnode p, Intnode n) {
             prev = p;
             next = n;
         }
-        public Intnode(Intnode p, BleepBlorp i, Intnode n) {
+        public Intnode(Intnode p, T i, Intnode n) {
             prev = p;
-            item = i;
+            T = i;
             next = n;
         }
     }
@@ -28,7 +28,7 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
         //sentinel_back.prev = sentinel_front;
         size = 0;
     }
-    public LinkedListDeque(BleepBlorp x) {
+    public LinkedListDeque(T x) {
         sentinel_front = new Intnode(null,null);
         sentinel_back = new Intnode(null, null);
         Intnode first = new Intnode(null, x, null);
@@ -37,26 +37,26 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
         size = 1;
     }
     @Override
-    public void addFirst(BleepBlorp item) {
+    public void addFirst(T T) {
         if (this.size() == 0) {
-            Intnode t = new Intnode(sentinel_front, item, sentinel_back);
+            Intnode t = new Intnode(sentinel_front, T, sentinel_back);
             sentinel_front.next = t;
             sentinel_back.prev = t;
         }else {
-            Intnode t = new Intnode(sentinel_front, item, sentinel_front.next);
+            Intnode t = new Intnode(sentinel_front, T, sentinel_front.next);
             sentinel_front.next.prev = t;
             sentinel_front.next = t;
         }
         size = size + 1;
     }
     @Override
-    public void addLast(BleepBlorp item) {
+    public void addLast(T T) {
         if (this.size() == 0) {
-            Intnode u = new Intnode(sentinel_front, item, sentinel_back);
+            Intnode u = new Intnode(sentinel_front, T, sentinel_back);
             sentinel_front.next = u;
             sentinel_back.prev = u;
         }else {
-            Intnode u = new Intnode(sentinel_back.prev, item, sentinel_back);
+            Intnode u = new Intnode(sentinel_back.prev, T, sentinel_back);
             sentinel_back.prev.next = u;
             sentinel_back.prev = u;
         }
@@ -70,13 +70,13 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
     public void printDeque() {
         Intnode p = sentinel_front;
         for (int i = 0; i < this.size(); i++) {
-            System.out.print(p.next.item + " ");
+            System.out.print(p.next.T + " ");
             p = p.next;
         }
         System.out.println("");
     }
     @Override
-    public BleepBlorp removeFirst() {
+    public T removeFirst() {
         Intnode q = sentinel_front.next;
         if (this.size() <= 0) {
             return null;
@@ -84,11 +84,11 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
             size = size - 1;
             sentinel_front.next.next.prev = sentinel_front;
             sentinel_front.next = sentinel_front.next.next;
-            return q.item;
+            return q.T;
         }
     }
     @Override
-    public  BleepBlorp removeLast() {
+    public  T removeLast() {
         Intnode r = sentinel_back.prev;
         if (this.size() <= 0) {
             return null;
@@ -98,11 +98,11 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
             sentinel_back.prev.next = sentinel_back;
             //sentinel_back.prev.prev.next = sentinel_back;
             //sentinel_back.prev = sentinel_back.prev.prev;
-            return r.item;
+            return r.T;
         }
     }
     @Override
-    public BleepBlorp get(int index) {
+    public T get(int index) {
         Intnode s = sentinel_front;
         if (index < 0 || index >= this.size()) {
             return null;
@@ -110,18 +110,18 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
             for (int i = index; i >= 0; i--) {
                 s = s.next;
             }
-            return s.item;
+            return s.T;
         }
     }
-    public BleepBlorp getRecursivehelper(int index, Intnode w) {
+    public T getRecursivehelper(int index, Intnode w) {
         if (index == 0) {
-            return w.item;
+            return w.T;
         } else {
             w = w.next;
             return getRecursivehelper(index - 1, w);
         }
     }
-    public BleepBlorp getRecursive(int index) {
+    public T getRecursive(int index) {
         Intnode w = this.sentinel_front.next;
         if (index < 0 || index >= this.size()) {
             return null;
@@ -130,10 +130,10 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
         }
     }
     @Override
-    public Iterator<BleepBlorp> iterator() {
+    public Iterator<T> iterator() {
         return new LinkedListDeque.LinkedListDequeIterator();
     }
-    public class LinkedListDequeIterator implements Iterator<BleepBlorp> {
+    public class LinkedListDequeIterator implements Iterator<T> {
         private int wizPos;
         public LinkedListDequeIterator() {
             wizPos = 0;
@@ -141,10 +141,10 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
         public boolean hasNext() {
             return wizPos < size;
         }
-        public BleepBlorp next() {
-            BleepBlorp returnItem = get(wizPos);
+        public T next() {
+            T returnT = get(wizPos);
             wizPos += 1;
-            return returnItem;
+            return returnT;
         }
     }
 
@@ -158,7 +158,7 @@ public class LinkedListDeque<BleepBlorp> implements Deque<BleepBlorp>, Iterable<
         if (o == null) {
             return false;
         }
-        Deque<BleepBlorp> ol = (Deque<BleepBlorp>) o;
+        Deque<T> ol = (Deque<T>) o;
         if (ol.size() != this.size()) {
             return false;
         }
