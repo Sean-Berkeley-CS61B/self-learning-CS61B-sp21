@@ -3,7 +3,7 @@ package deque;
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
-    public class Intnode {
+    private class Intnode {
         public Intnode prev;
         public T T;
         public Intnode next;
@@ -28,14 +28,14 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         //sentinel_back.prev = sentinel_front;
         size = 0;
     }
-    public LinkedListDeque(T x) {
-        sentinel_front = new Intnode(null,null);
-        sentinel_back = new Intnode(null, null);
-        Intnode first = new Intnode(null, x, null);
-        sentinel_front.next = first;
-        sentinel_back.prev = first;
-        size = 1;
-    }
+//    public LinkedListDeque(T x) {
+//        sentinel_front = new Intnode(null,null);
+//        sentinel_back = new Intnode(null, null);
+//        Intnode first = new Intnode(null, x, null);
+//        sentinel_front.next = first;
+//        sentinel_back.prev = first;
+//        size = 1;
+//    }
     @Override
     public void addFirst(T T) {
         if (this.size() == 0) {
@@ -113,7 +113,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
             return s.T;
         }
     }
-    public T getRecursivehelper(int index, Intnode w) {
+    private T getRecursivehelper(int index, Intnode w) {
         if (index == 0) {
             return w.T;
         } else {
@@ -133,7 +133,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     public Iterator<T> iterator() {
         return new LinkedListDeque.LinkedListDequeIterator();
     }
-    public class LinkedListDequeIterator implements Iterator<T> {
+    private class LinkedListDequeIterator implements Iterator<T> {
         private int wizPos;
         public LinkedListDequeIterator() {
             wizPos = 0;
@@ -168,35 +168,5 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
             }
         }
         return true;
-    }
-
-    public static void main(String[] args) {
-        LinkedListDeque<Integer> d1 = new LinkedListDeque<>(1);
-        d1.addFirst(10);
-        d1.addFirst(179);
-        d1.addFirst(2334);
-        d1.addLast(45254);
-        //d1.addLast(1);
-        System.out.println(d1.size());
-        //d1.removeFirst();
-        //d1.removeLast();
-        //d1.removeLast();
-//        System.out.println(d1.get(2));
-//        d1.printDeque();
-        LinkedListDeque<Integer> d2 = null;
-//        d2.addFirst(10);
-//        d2.addFirst(179);
-//        d2.addFirst(2334);
-//        d2.addLast(45254);
-//        d2.addLast(1);
-        //d2.printDeque();
-        //System.out.println(d1.removeFirst());
-        d1.printDeque();
-//        d2.printDeque();
-        System.out.println(d1.equals(d2));
-        for (int i : d1) {
-            System.out.println(i);
-        }
-//        d1.printDeque();
     }
 }

@@ -30,25 +30,14 @@ public class MaxArrayDeque<T> extends ArrayDeque<T> {
         }
         return maxie;
     }
-    public static class IntComparator implements Comparator<Integer> {
+    private static class IntComparator implements Comparator<Integer> {
         public int compare(Integer a,  Integer b) {
             return a - b;
         }
     }
-    public static class ReverseIntComparator implements Comparator<Integer> {
+    private static class ReverseIntComparator implements Comparator<Integer> {
         public int compare(Integer a,  Integer b) {
             return b - a;
         }
-    }
-
-    public static void main(String[] args) {
-        Comparator<Integer> c = new IntComparator();
-        Comparator<Integer> d = new ReverseIntComparator();
-        MaxArrayDeque md1 = new MaxArrayDeque<Integer>(c);
-        for (int i = 0; i < 100; i++) {
-            md1.addLast(i);
-        }
-        System.out.println(md1.max());
-        System.out.println(md1.max(d));
     }
 }
