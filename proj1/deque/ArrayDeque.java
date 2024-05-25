@@ -77,10 +77,27 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             }
         System.out.println("");
     }
+    private void reducelength() {
+        T[] a = (T[]) new Object[(int) Math.round(Ts.length * 0.5)];
+        if (nextLast != 0 && nextLast <= nextFirst) {
+            System.arraycopy(Ts, 0, a, 0, nextLast);
+            System.arraycopy(Ts, nextFirst + 1, a, a.length - (Ts.length - (nextFirst + 1)), Ts.length - (nextFirst + 1));
+            nextFirst = a.length - (Ts.length - (nextFirst + 1)) + 1;
+            Ts = a;
+        } else {
+            System.arraycopy(Ts, nextFirst + 1, a, a.length - size, size);
+            nextFirst = a.length - size - 1;
+            nextLast = 0;
+            Ts = a;
+        }
+    }
     @Override
     public T removeFirst() {
         if (this.size() == 0) {
             return null;
+        }
+        if (this.size() <= Math.round(0.3 * Ts.length)) {
+            this.reducelength();
         }
         size = size - 1;
         if (nextFirst == Ts.length - 1) {
@@ -95,6 +112,9 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     public T removeLast() {
         if (this.size() == 0) {
             return null;
+        }
+        if (this.size() <= Math.round(0.3 * Ts.length)) {
+            this.reducelength();
         }
         size = size - 1;
         if (nextLast == 0) {
@@ -116,7 +136,6 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
             return Ts[index - (Ts.length - nextFirst - 1)];
         }
     }
-
     @Override
     public Iterator<T> iterator() {
         return new ArrayDequeIterator();
@@ -156,4 +175,14 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         }
         return true;
     }
+//    public static void main(String[] arg) {
+//        ArrayDeque<Integer> ad = new ArrayDeque<>();
+//        for (int i = 1; i < 10; i++) {
+//            ad.addLast(i);
+//        }
+//        Iterator<Integer> aditer = ad.iterator();
+//        while (aditer.hasNext()) {
+//            System.out.println(aditer.next());
+//        }
+//    }
 }
