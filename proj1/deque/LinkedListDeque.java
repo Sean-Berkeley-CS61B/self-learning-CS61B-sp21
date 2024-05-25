@@ -2,63 +2,63 @@ package deque;
 
 import java.util.Iterator;
 
-public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
+public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
     private class Intnode {
-        public Intnode prev;
-        public T T;
-        public Intnode next;
-        public Intnode(Intnode p, Intnode n) {
+        private Intnode prev;
+        private T T;
+        private Intnode next;
+        private Intnode(Intnode p, Intnode n) {
             prev = p;
             next = n;
         }
-        public Intnode(Intnode p, T i, Intnode n) {
+        private Intnode(Intnode p, T i, Intnode n) {
             prev = p;
             T = i;
             next = n;
         }
     }
-    private Intnode sentinel_front;
-    private Intnode sentinel_back;
+    private Intnode sentinelFront;
+    private Intnode sentinelBack;
     private int size;
 
     public LinkedListDeque() {
-        sentinel_front = new Intnode(null,null);
-        sentinel_back = new Intnode(null, null);
-        //sentinel_front.next = sentinel_back;
-        //sentinel_back.prev = sentinel_front;
+        sentinelFront = new Intnode(null, null);
+        sentinelBack = new Intnode(null, null);
+        //sentinelFront.next = sentinelBack;
+        //sentinelBack.prev = sentinelFront;
         size = 0;
     }
 //    public LinkedListDeque(T x) {
-//        sentinel_front = new Intnode(null,null);
-//        sentinel_back = new Intnode(null, null);
+//        sentinelFront = new Intnode(null,null);
+//        sentinelBack = new Intnode(null, null);
 //        Intnode first = new Intnode(null, x, null);
-//        sentinel_front.next = first;
-//        sentinel_back.prev = first;
+//        sentinelFront.next = first;
+//        sentinelBack.prev = first;
 //        size = 1;
 //    }
     @Override
     public void addFirst(T T) {
         if (this.size() == 0) {
-            Intnode t = new Intnode(sentinel_front, T, sentinel_back);
-            sentinel_front.next = t;
-            sentinel_back.prev = t;
-        }else {
-            Intnode t = new Intnode(sentinel_front, T, sentinel_front.next);
-            sentinel_front.next.prev = t;
-            sentinel_front.next = t;
+            Intnode t = new Intnode(sentinelFront, T, sentinelBack);
+            sentinelFront.next = t;
+            sentinelBack.prev = t;
+        } else {
+            Intnode t = new Intnode(sentinelFront, T, sentinelFront.next);
+            sentinelFront.next.prev = t;
+            sentinelFront.next = t;
         }
         size = size + 1;
     }
     @Override
     public void addLast(T T) {
         if (this.size() == 0) {
-            Intnode u = new Intnode(sentinel_front, T, sentinel_back);
-            sentinel_front.next = u;
-            sentinel_back.prev = u;
-        }else {
-            Intnode u = new Intnode(sentinel_back.prev, T, sentinel_back);
-            sentinel_back.prev.next = u;
-            sentinel_back.prev = u;
+            Intnode u = new Intnode(sentinelFront, T, sentinelBack);
+            sentinelFront.next = u;
+            sentinelBack.prev = u;
+        } else {
+            Intnode u = new Intnode(sentinelBack.prev, T, sentinelBack);
+            sentinelBack.prev.next = u;
+            sentinelBack.prev = u;
         }
         size = size + 1;
     }
@@ -68,7 +68,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     }
     @Override
     public void printDeque() {
-        Intnode p = sentinel_front;
+        Intnode p = sentinelFront;
         for (int i = 0; i < this.size(); i++) {
             System.out.print(p.next.T + " ");
             p = p.next;
@@ -77,36 +77,36 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     }
     @Override
     public T removeFirst() {
-        Intnode q = sentinel_front.next;
+        Intnode q = sentinelFront.next;
         if (this.size() <= 0) {
             return null;
-        }else {
+        } else {
             size = size - 1;
-            sentinel_front.next.next.prev = sentinel_front;
-            sentinel_front.next = sentinel_front.next.next;
+            sentinelFront.next.next.prev = sentinelFront;
+            sentinelFront.next = sentinelFront.next.next;
             return q.T;
         }
     }
     @Override
     public  T removeLast() {
-        Intnode r = sentinel_back.prev;
+        Intnode r = sentinelBack.prev;
         if (this.size() <= 0) {
             return null;
-        }else {
+        } else {
             size = size - 1;
-            sentinel_back.prev = sentinel_back.prev.prev;
-            sentinel_back.prev.next = sentinel_back;
-            //sentinel_back.prev.prev.next = sentinel_back;
-            //sentinel_back.prev = sentinel_back.prev.prev;
+            sentinelBack.prev = sentinelBack.prev.prev;
+            sentinelBack.prev.next = sentinelBack;
+            //sentinelBack.prev.prev.next = sentinelBack;
+            //sentinelBack.prev = sentinelBack.prev.prev;
             return r.T;
         }
     }
     @Override
     public T get(int index) {
-        Intnode s = sentinel_front;
+        Intnode s = sentinelFront;
         if (index < 0 || index >= this.size()) {
             return null;
-        }else {
+        } else {
             for (int i = index; i >= 0; i--) {
                 s = s.next;
             }
@@ -122,7 +122,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
         }
     }
     public T getRecursive(int index) {
-        Intnode w = this.sentinel_front.next;
+        Intnode w = this.sentinelFront.next;
         if (index < 0 || index >= this.size()) {
             return null;
         } else {
@@ -135,7 +135,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T>{
     }
     private class LinkedListDequeIterator implements Iterator<T> {
         private int wizPos;
-        public LinkedListDequeIterator() {
+        private LinkedListDequeIterator() {
             wizPos = 0;
         }
         public boolean hasNext() {

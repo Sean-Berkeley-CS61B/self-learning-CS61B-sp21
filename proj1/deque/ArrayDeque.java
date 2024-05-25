@@ -8,45 +8,45 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     private int nextFirst = 3;
     private int nextLast = 4;
     private int sizecpy;
-    private T[] Ts;
+    private T[] iniDeque;
     public ArrayDeque() {
-        Ts = (T[]) new Object[8];
+        iniDeque = (T[]) new Object[8];
         size = 0;
     }
     private void expandsize() {
-        T[] a = (T[]) new Object[Ts.length * 2];
+        T[] a = (T[]) new Object[iniDeque.length * 2];
         if (nextLast == 0) {
-            System.arraycopy(Ts, 0, a, a.length - size, size);
+            System.arraycopy(iniDeque, 0, a, a.length - size, size);
             nextFirst = a.length - size - 1;
-            Ts = a;
+            iniDeque = a;
         } else {
-            System.arraycopy(Ts, 0, a, 0, nextLast);
-            System.arraycopy(Ts, nextLast, a, a.length - (size - nextFirst) + 1, size - nextLast);
+            System.arraycopy(iniDeque, 0, a, 0, nextLast);
+            System.arraycopy(iniDeque, nextLast, a, a.length - (size - nextFirst) + 1, size - nextLast);
             nextFirst = a.length - (size - nextFirst);
-            Ts = a;
+            iniDeque = a;
         }
     }
     @Override
     public void addFirst(T x) {
-        if (size == Ts.length) {
+        if (size == iniDeque.length) {
             expandsize();
         }
-        Ts[nextFirst] = x;
+        iniDeque[nextFirst] = x;
         size = size + 1;
         if (nextFirst == 0) {
-            nextFirst = Ts.length - 1;
+            nextFirst = iniDeque.length - 1;
         } else {
             nextFirst = nextFirst - 1;
         }
     }
     @Override
     public void addLast(T x) {
-        if (size == Ts.length) {
+        if (size == iniDeque.length) {
             expandsize();
         }
-        Ts[nextLast] = x;
+        iniDeque[nextLast] = x;
         size = size + 1;
-        if (nextLast == Ts.length - 1) {
+        if (nextLast == iniDeque.length - 1) {
             nextLast = 0;
         } else {
             nextLast = nextLast + 1;
@@ -59,53 +59,54 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     @Override
     public void printDeque() {
         sizecpy = this.size();
-        if (nextFirst == Ts.length - 1) {
+        if (nextFirst == iniDeque.length - 1) {
             for (int i = 0; i < sizecpy; i++) {
-                System.out.print(Ts[i] + " ");
+                System.out.print(iniDeque[i] + " ");
             }
         } else {
             j = nextFirst + 1;
-            while (j < Ts.length && Ts[j] != null) {
-                System.out.print(Ts[j] + " ");
+            while (j < iniDeque.length && iniDeque[j] != null) {
+                System.out.print(iniDeque[j] + " ");
                 j = j + 1;
             }
             k = 0;
-            while (Ts[k] != null && k <= this.size() - (Ts.length - nextFirst)) {
-                System.out.print(Ts[k] + " ");
+            while (iniDeque[k] != null && k <= this.size() - (iniDeque.length - nextFirst)) {
+                System.out.print(iniDeque[k] + " ");
                 k = k + 1;
             }
-            }
+        }
         System.out.println("");
     }
-//    private void reducelength() {
-//        T[] a = (T[]) new Object[(int) Math.round(Ts.length * 0.5)];
-//        if (nextLast != 0 && nextLast <= nextFirst) {
-//            System.arraycopy(Ts, 0, a, 0, nextLast);
-//            System.arraycopy(Ts, nextFirst + 1, a, a.length - (Ts.length - (nextFirst + 1)), Ts.length - (nextFirst + 1));
-//            nextFirst = a.length - (Ts.length - (nextFirst + 1)) + 1;
-//            Ts = a;
-//        } else {
-//            System.arraycopy(Ts, nextFirst + 1, a, a.length - size, size);
-//            nextFirst = a.length - size - 1;
-//            nextLast = 0;
-//            Ts = a;
-//        }
-//    }
+    private void reducelength() {
+        T[] a = (T[]) new Object[(int) Math.ceil(iniDeque.length * 0.25)];
+        if (nextLast != 0 && nextLast <= nextFirst) {
+            System.arraycopy(iniDeque, 0, a, 0, nextLast);
+            int fstHf = size - nextLast;
+            System.arraycopy(iniDeque, nextFirst + 1, a, a.length - (iniDeque.length - fstHf), fstHf);
+            nextFirst = a.length - (iniDeque.length - fstHf) - 1;
+            iniDeque = a;
+        } else {
+            System.arraycopy(iniDeque, nextFirst + 1, a, a.length - size, size);
+            nextFirst = a.length - size - 1;
+            nextLast = 0;
+            iniDeque = a;
+        }
+    }
     @Override
     public T removeFirst() {
         if (this.size() == 0) {
             return null;
         }
-//        if (this.size() <= Math.round(0.3 * Ts.length)) {
-//            this.reducelength();
-//        }
+        if (this.size() <= Math.ceil(0.25 * iniDeque.length)) {
+            this.reducelength();
+        }
         size = size - 1;
-        if (nextFirst == Ts.length - 1) {
+        if (nextFirst == iniDeque.length - 1) {
             nextFirst = 0;
-            return Ts[0];
+            return iniDeque[0];
         } else {
             nextFirst = nextFirst + 1;
-            return Ts[nextFirst];
+            return iniDeque[nextFirst];
         }
     }
     @Override
@@ -113,16 +114,16 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         if (this.size() == 0) {
             return null;
         }
-//        if (this.size() <= Math.round(0.3 * Ts.length)) {
-//            this.reducelength();
-//        }
+        if (this.size() <= Math.ceil(0.25 * iniDeque.length)) {
+            this.reducelength();
+        }
         size = size - 1;
         if (nextLast == 0) {
-            nextLast = Ts.length - 1;
-            return Ts[Ts.length - 1];
+            nextLast = iniDeque.length - 1;
+            return iniDeque[iniDeque.length - 1];
         } else {
             nextLast = nextLast - 1;
-            return Ts[nextLast];
+            return iniDeque[nextLast];
         }
     }
     @Override
@@ -130,10 +131,10 @@ public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
         if (index < 0 || index >= this.size()) {
             return null;
         }
-        if (index < Ts.length - nextFirst - 1) {
-            return Ts[nextFirst + index + 1];
+        if (index < iniDeque.length - nextFirst - 1) {
+            return iniDeque[nextFirst + index + 1];
         } else {
-            return Ts[index - (Ts.length - nextFirst - 1)];
+            return iniDeque[index - (iniDeque.length - nextFirst - 1)];
         }
     }
     @Override
